@@ -97,6 +97,11 @@ public class LoginAct extends BaseActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
     private void reqSmsLogin() {
         if (!check_agree.isChecked()) {
             PopTip.show("请在阅读隐私协议和服务协议后勾选同意");

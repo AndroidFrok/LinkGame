@@ -50,7 +50,6 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
-
         Log.d(Constant.TAG,"系统返回");
     }
 }

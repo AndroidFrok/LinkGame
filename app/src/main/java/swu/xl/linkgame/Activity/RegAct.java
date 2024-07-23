@@ -41,6 +41,10 @@ public class RegAct extends BaseActivity {
         return R.layout.layout_reg;
     }*/
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 
     protected void initView() {
         tv_login = findViewById(R.id.tv_login);

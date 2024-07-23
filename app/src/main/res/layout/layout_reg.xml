@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            app:leftIcon="@drawable/bar_arrows_left_white"
+            app:leftIcon="@null"
             app:lineVisible="false"
             app:title="注册"
             app:titleColor="@color/white" />
