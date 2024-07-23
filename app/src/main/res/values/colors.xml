@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimary">#7CBA6F</color>
+    <color name="colorPrimaryDark">#6B9F60</color>
+    <!--光标  选框钩子之类的 -->
+    <color name="colorAccent">@color/colorPrimary</color>
     <color name="colorProgress">#00ffffff</color>
     <color name="self_white">#00ffffff</color>
 
@@ -76,9 +77,9 @@
     <color name="orange">#FFFFA500</color>
 
     <!-- App 样式中引用的颜色 -->
-    <color name="common_primary_color">#D155FF</color>
-    <color name="common_primary_dark_color">#5800FF</color>
-    <color name="common_accent_color">@color/common_primary_dark_color</color>
+    <color name="common_primary_color">@color/colorPrimary</color>
+    <color name="common_primary_dark_color">@color/colorPrimaryDark</color>
+    <color name="common_accent_color">@color/common_primary_color</color>
     <color name="common_window_background_color">#F4F4F4</color>
     <color name="common_text_color">#333333</color>
     <color name="common_text_hint_color">@color/panda</color>

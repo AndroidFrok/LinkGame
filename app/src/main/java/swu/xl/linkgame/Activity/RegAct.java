@@ -33,6 +33,7 @@ public class RegAct extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_reg);
+        initView();
     }
 
    /* @Override

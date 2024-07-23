@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -37,6 +38,7 @@ import swu.xl.linkgame.Music.BackgroundMusicManager;
 import swu.xl.linkgame.Music.SoundPlayUtil;
 import swu.xl.linkgame.R;
 import swu.xl.linkgame.Util.PxUtil;
+import swu.xl.linkgame.Util.UserHelper;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
     //简单模式
@@ -47,11 +49,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     Button mode_hard;
 
     //设置按钮
-    Button btn_setting;
+    AppCompatImageView btn_setting;
     //帮助按钮
-    Button btn_help;
+    AppCompatImageView btn_help;
     //商店按钮
-    Button btn_store;
+    AppCompatImageView btn_store;
 
     //根布局
     RelativeLayout root_main;
@@ -82,8 +84,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         //设置模式按钮的drawableLeft
         setDrawableLeft(mode_easy, R.drawable.main_mode_easy);
-        setDrawableLeft(mode_normal,R.drawable.main_mode_normal);
-        setDrawableLeft(mode_hard,R.drawable.main_mode_hard);
+        setDrawableLeft(mode_normal, R.drawable.main_mode_normal);
+        setDrawableLeft(mode_hard, R.drawable.main_mode_hard);
 
         //播放音乐
         playMusic();
@@ -133,7 +135,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         List<XLProp> props = LitePal.findAll(XLProp.class);
 
         //如果用户数据为空，装入数据
-        if (users.size() == 0){
+        if (users.size() == 0) {
             XLUser user = new XLUser();
             user.setU_money(1000);
             user.setU_background(0);
@@ -141,18 +143,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
 
         //如果关卡数据为空，装入数据
-        if (levels.size() == 0){
+        if (levels.size() == 0) {
             //简单模式
-            for(int i = 1; i <= 40; i++){
+            for (int i = 1; i <= 40; i++) {
                 XLLevel level = new XLLevel();
                 //设置关卡号
                 level.setL_id(i);
                 //设置关卡模式
                 level.setL_mode('1');
                 //设置关卡的闯关状态
-                if (i == 1){
+                if (i == 1) {
                     level.setL_new('4');
-                }else {
+                } else {
                     level.setL_new('0');
                 }
                 //设置关卡的闯关时间
@@ -163,16 +165,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
 
             //普通模式
-            for(int i = 1; i <= 40; i++){
+            for (int i = 1; i <= 40; i++) {
                 XLLevel level = new XLLevel();
                 //设置关卡号
                 level.setL_id(i);
                 //设置关卡模式
                 level.setL_mode('2');
                 //设置关卡的闯关状态
-                if (i == 1){
+                if (i == 1) {
                     level.setL_new('4');
-                }else {
+                } else {
                     level.setL_new('0');
                 }
                 //设置关卡的闯关时间
@@ -183,16 +185,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
 
             //困难模式
-            for(int i = 1; i <= 40; i++){
+            for (int i = 1; i <= 40; i++) {
                 XLLevel level = new XLLevel();
                 //设置关卡号
                 level.setL_id(i);
                 //设置关卡模式
                 level.setL_mode('3');
                 //设置关卡的闯关状态
-                if (i == 1){
+                if (i == 1) {
                     level.setL_new('4');
-                }else {
+                } else {
                     level.setL_new('0');
                 }
                 //设置关卡的闯关时间
@@ -204,7 +206,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
 
         //如果道具数据为空，装入数据
-        if (props.size() == 0){
+        if (props.size() == 0) {
             //1.装入拳头道具
             XLProp prop_fight = new XLProp();
             prop_fight.setP_kind('1');
@@ -254,9 +256,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //获取指定的drawable
         Drawable drawable = getResources().getDrawable(main_mode_resource);
         //设置其drawable的左上右下
-        drawable.setBounds(PxUtil.dpToPx(20,this),PxUtil.dpToPx(2,this), PxUtil.dpToPx(60,this),PxUtil.dpToPx(42,this));
+        drawable.setBounds(PxUtil.dpToPx(20, this), PxUtil.dpToPx(2, this), PxUtil.dpToPx(60, this), PxUtil.dpToPx(42, this));
         //设置放在控件的左上右下
-        btn.setCompoundDrawables(drawable,null,null,null);
+        btn.setCompoundDrawables(drawable, null, null, null);
     }
 
     /**
@@ -284,17 +286,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         final FragmentTransaction transaction = manager.beginTransaction();
 
         //区分点击
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.main_mode_easy:
-                Log.d(Constant.TAG,"简单模式按钮");
+                Log.d(Constant.TAG, "简单模式按钮");
 
                 //查询简单模式的数据
                 List<XLLevel> XLLevels1 = LitePal.where("l_mode == ?", "1").find(XLLevel.class);
-                Log.d(Constant.TAG,XLLevels1.size()+"");
+                Log.d(Constant.TAG, XLLevels1.size() + "");
 
                 //依次查询每一个内容
                 for (XLLevel xlLevel : XLLevels1) {
-                    Log.d(Constant.TAG,xlLevel.toString());
+                    Log.d(Constant.TAG, xlLevel.toString());
                 }
 
                 //跳转界面
@@ -302,7 +304,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 //加入数据
                 Bundle bundle_easy = new Bundle();
                 //加入关卡模式数据
-                bundle_easy.putString("mode","简单");
+                bundle_easy.putString("mode", "简单");
                 //加入关卡数据
                 bundle_easy.putParcelableArrayList("levels", (ArrayList<? extends Parcelable>) XLLevels1);
                 intent_easy.putExtras(bundle_easy);
@@ -311,15 +313,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                 break;
             case R.id.main_mode_normal:
-                Log.d(Constant.TAG,"普通模式按钮");
+                Log.d(Constant.TAG, "普通模式按钮");
 
                 //查询简单模式的数据
                 List<XLLevel> XLLevels2 = LitePal.where("l_mode == ?", "2").find(XLLevel.class);
-                Log.d(Constant.TAG,XLLevels2.size()+"");
+                Log.d(Constant.TAG, XLLevels2.size() + "");
 
                 //依次查询每一个内容
                 for (XLLevel xlLevel : XLLevels2) {
-                    Log.d(Constant.TAG,xlLevel.toString());
+                    Log.d(Constant.TAG, xlLevel.toString());
                 }
 
                 //跳转界面
@@ -327,7 +329,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 //加入数据
                 Bundle bundle_normal = new Bundle();
                 //加入关卡模式数据
-                bundle_normal.putString("mode","简单");
+                bundle_normal.putString("mode", "简单");
                 //加入关卡数据
                 bundle_normal.putParcelableArrayList("levels", (ArrayList<? extends Parcelable>) XLLevels2);
                 intent_normal.putExtras(bundle_normal);
@@ -336,15 +338,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                 break;
             case R.id.main_mode_hard:
-                Log.d(Constant.TAG,"困难模式按钮");
+                Log.d(Constant.TAG, "困难模式按钮");
 
                 //查询简单模式的数据
                 List<XLLevel> XLLevels3 = LitePal.where("l_mode == ?", "3").find(XLLevel.class);
-                Log.d(Constant.TAG,XLLevels3.size()+"");
-                
+                Log.d(Constant.TAG, XLLevels3.size() + "");
+
                 //依次查询每一个内容
                 for (XLLevel xlLevel : XLLevels3) {
-                    Log.d(Constant.TAG,xlLevel.toString());
+                    Log.d(Constant.TAG, xlLevel.toString());
                 }
 
                 //跳转界面
@@ -352,7 +354,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 //加入数据
                 Bundle bundle_hard = new Bundle();
                 //加入关卡模式数据
-                bundle_hard.putString("mode","简单");
+                bundle_hard.putString("mode", "简单");
                 //加入关卡数据
                 bundle_hard.putParcelableArrayList("levels", (ArrayList<? extends Parcelable>) XLLevels3);
                 intent_hard.putExtras(bundle_hard);
@@ -361,29 +363,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                 break;
             case R.id.main_setting:
-                Log.d(Constant.TAG,"设置按钮");
+                Log.d(Constant.TAG, "设置按钮");
 
                 //添加一个fragment
                 final SettingFragment setting = new SettingFragment();
-                transaction.replace(R.id.root_main,setting,"setting");
+                transaction.replace(R.id.root_main, setting, "setting");
                 transaction.commit();
 
                 break;
             case R.id.main_help:
-                Log.d(Constant.TAG,"帮助按钮");
+                Log.d(Constant.TAG, "帮助按钮");
 
                 //添加一个fragment
                 final HelpFragment help = new HelpFragment();
-                transaction.replace(R.id.root_main,help,"help");
+                transaction.replace(R.id.root_main, help, "help");
                 transaction.commit();
 
                 break;
             case R.id.main_store:
-                Log.d(Constant.TAG,"商店按钮");
+                Log.d(Constant.TAG, "商店按钮");
 
                 //添加一个fragment
                 final StoreFragment store = new StoreFragment();
-                transaction.replace(R.id.root_main,store,"store");
+                transaction.replace(R.id.root_main, store, "store");
                 transaction.commit();
 
         }
@@ -392,7 +394,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        UserHelper.logout();
         unregisterReceiver(mBroadcastReceiver);
     }
 }

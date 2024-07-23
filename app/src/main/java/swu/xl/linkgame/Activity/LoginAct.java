@@ -118,7 +118,7 @@ public class LoginAct extends BaseActivity {
                 PopTip.show(result.getMsg());
 //                Timber.d(result.getCode() + "");
                 if (result.getCode() == 1) {
-//                    UserHelper.login(result.getData()) ;
+                    UserHelper.login(result.getData()) ;
                     EasyConfig.getInstance().addHeader(MmkvUtil.Token, MmkvUtil.getString(MmkvUtil.Token, ""));
                     startActivity(new Intent(LoginAct.this, MainActivity.class));
                     finish();
