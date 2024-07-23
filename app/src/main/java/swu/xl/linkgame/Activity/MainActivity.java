@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initView();
 
         //设置模式按钮的drawableLeft
-        setDrawableLeft(mode_easy,R.drawable.main_mode_easy);
+        setDrawableLeft(mode_easy, R.drawable.main_mode_easy);
         setDrawableLeft(mode_normal,R.drawable.main_mode_normal);
         setDrawableLeft(mode_hard,R.drawable.main_mode_hard);
 
