@@ -1,0 +1,60 @@
+2024-07-23 15:28:01 : ------------------  mediation adn adapter plugin start   ------------------
+2024-07-23 15:28:01 : packageName : swu.xl.linkgame:com.hjq.demo.kt:
+2024-07-23 15:28:01 : adapterExtension AutoAdapterExtension{autoUpdate=false, autoUpdateAdn=[], readLocationAutoVersion=false}
+2024-07-23 15:28:01 : ------------------   mediation adn adapter plugin end 
+
+
+2024-07-23 15:28:41 : gradleVersion : 6.5
+2024-07-23 15:28:41 : pluginVersion : 1.0.3
+2024-07-23 15:28:41 : ------------------  mediation adn adapter plugin start   ------------------
+2024-07-23 15:28:41 : packageName : swu.xl.linkgame:
+2024-07-23 15:28:41 : adapterExtension AutoAdapterExtension{autoUpdate=false, autoUpdateAdn=[], readLocationAutoVersion=false}
+2024-07-23 15:28:41 : ------------------   mediation adn adapter plugin end 
+
+
+2024-07-23 15:29:05 : gradleVersion : 6.5
+2024-07-23 15:29:05 : pluginVersion : 1.0.3
+2024-07-23 15:29:05 : ------------------  mediation adn adapter plugin start   ------------------
+2024-07-23 15:29:05 : packageName : swu.xl.linkgame:
+2024-07-23 15:29:05 : adapterExtension AutoAdapterExtension{autoUpdate=false, autoUpdateAdn=[], readLocationAutoVersion=false}
+2024-07-23 15:29:05 : ------------------   mediation adn adapter plugin end 
+
+
+2024-07-23 15:30:39 : gradleVersion : 6.5
+2024-07-23 15:30:39 : pluginVersion : 1.0.3
+2024-07-23 15:30:39 : ------------------  mediation adn adapter plugin start   ------------------
+2024-07-23 15:30:39 : packageName : swu.xl.linkgame:
+2024-07-23 15:30:39 : adapterExtension AutoAdapterExtension{autoUpdate=false, autoUpdateAdn=[], readLocationAutoVersion=false}
+2024-07-23 15:30:40 : ------------------   mediation adn adapter plugin end 
+
+
+2024-07-23 15:30:50 : gradleVersion : 6.5
+2024-07-23 15:30:50 : pluginVersion : 1.0.3
+2024-07-23 15:30:50 : ------------------  mediation adn adapter plugin start   ------------------
+2024-07-23 15:30:50 : packageName : swu.xl.linkgame:
+2024-07-23 15:30:50 : adapterExtension AutoAdapterExtension{autoUpdate=false, autoUpdateAdn=[], readLocationAutoVersion=false}
+2024-07-23 15:30:51 : ------------------   mediation adn adapter plugin end 
+
+
+2024-07-23 15:33:26 : gradleVersion : 6.5
+2024-07-23 15:33:26 : pluginVersion : 1.0.3
+2024-07-23 15:33:26 : ------------------  mediation adn adapter plugin start   ------------------
+2024-07-23 15:33:26 : packageName : swu.xl.linkgame:
+2024-07-23 15:33:26 : adapterExtension AutoAdapterExtension{autoUpdate=false, autoUpdateAdn=[], readLocationAutoVersion=false}
+2024-07-23 15:33:26 : ------------------   mediation adn adapter plugin end 
+
+
+2024-07-23 15:33:52 : gradleVersion : 6.5
+2024-07-23 15:33:52 : pluginVersion : 1.0.3
+2024-07-23 15:33:52 : ------------------  mediation adn adapter plugin start   ------------------
+2024-07-23 15:33:52 : packageName : swu.xl.linkgame:
+2024-07-23 15:33:52 : adapterExtension AutoAdapterExtension{autoUpdate=false, autoUpdateAdn=[], readLocationAutoVersion=false}
+2024-07-23 15:33:52 : ------------------   mediation adn adapter plugin end 
+
+
+2024-07-23 15:37:07 : ------------------  mediation adn adapter plugin start   ------------------
+2024-07-23 15:37:07 : packageName : swu.xl.linkgame:
+2024-07-23 15:37:07 : adapterExtension AutoAdapterExtension{autoUpdate=false, autoUpdateAdn=[], readLocationAutoVersion=false}
+2024-07-23 15:37:07 : ------------------   mediation adn adapter plugin end 
+
+

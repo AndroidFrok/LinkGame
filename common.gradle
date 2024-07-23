@@ -1,0 +1,113 @@
+apply plugin: 'mediation-auto-adapter'
+// 通用配置
+android {
+
+    // 编译源码版本
+    compileSdkVersion rootProject.ext.android1.targetSdkVersion
+    defaultConfig {
+        // 最低安装版本
+        minSdkVersion rootProject.ext.android1.minSdkVersion
+        // 目标适配版本
+        targetSdkVersion rootProject.ext.android1.targetSdkVersion
+        versionName rootProject.ext.android1.versionName
+        versionCode rootProject.ext.android1.versionCode
+        ndk {
+            // 仅保留两种架构的 so 库，根据 Bugly 统计得出
+            // armeabi：万金油架构平台（占用率：0%）
+            // armeabi-v7a：曾经主流的架构平台（占用率：10%）
+            // arm64-v8a：目前主流架构平台（占用率：95%） , 'arm64-v8a'
+            abiFilters 'armeabi-v7a', "arm64-v8a"
+        }
+        manifestPlaceholders = [JPUSH_PKGNAME: 'uni.UNIC83D0A3',
+                                //JPush 上注册的包名对应的 Appkey.
+                                JPUSH_APPKEY : "fb4b27edb4a05927324e1779",
+                                //暂时填写默认值即可.
+                                JPUSH_CHANNEL: "developer-default",
+
+                                //若不集成厂商通道，可直接跳过以下配置
+//                MEIZU_APPKEY : "MZ-魅族的APPKEY",
+//                MEIZU_APPID : "MZ-魅族的APPID",
+//                XIAOMI_APPID : "MI-小米的APPID",
+//                XIAOMI_APPKEY : "MI-小米的APPKEY",
+//                OPPO_APPKEY : "OP-oppo的APPKEY",
+//                OPPO_APPID : "OP-oppo的APPID",
+//                OPPO_APPSECRET : "OP-oppo的APPSECRET",
+//                VIVO_APPKEY : "vivo的APPKEY",
+//                VIVO_APPID : "vivo的APPID"
+//                HONOR_APPID : "Honor的APP ID",
+        ]
+    }
+
+    // 支持 Java JDK 8
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // 设置存放 so 文件的目录
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    // 可在 Studio 最左侧中的 Build Variants 选项中切换默认的构建类型
+    buildTypes {
+        // 调试版本
+        debug {}
+        // 预览版本
+        preview {}
+        // 正式版本
+        release {}
+    }
+
+    // 代码警告配置
+    lintOptions {
+        // 禁用文本硬编码警告
+        disable 'HardcodedText'
+        // 禁用图片描述警告
+        disable 'ContentDescription'
+    }
+}
+
+afterEvaluate {
+    // 前提条件是这个 Module 工程必须是 Library 类型，并且排除名为 umeng 的 Module 工程
+    if (android.defaultConfig.applicationId == null && "umeng" != getName()) {
+        // 排除 BuildConfig.class
+        generateReleaseBuildConfig.enabled = false
+        generatePreviewBuildConfig.enabled = false
+        generateDebugBuildConfig.enabled = false
+    }
+}
+
+dependencies {
+    // 依赖 libs 目录下所有的 jar 和 aar 包
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+
+    // AndroidX 库：https://github.com/androidx/androidx
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    // Material 库：https://github.com/material-components/material-components-android
+    implementation 'com.google.android.material:material:1.4.0'
+
+    implementation 'org.greenrobot:eventbus:3.3.1'
+
+    // 此处以JPush 5.0.3 版本为例，注意：从 5.0.0 版本开始可以自动拉取 JCore 包，无需另外配置
+    implementation 'cn.jiguang.sdk:jpush:5.0.3'
+//    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.3'
+//    api 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.3'
+//    implementation 'com.github.xiaoyanger0825:NiceVieoPlayer:v2.2'
+
+    implementation 'com.amap.api:location:latest.integration'
+    def logcat = 11.85
+    debugImplementation "com.github.getActivity:Logcat:$logcat"
+    previewImplementation "com.github.getActivity:Logcat:$logcat"
+}
+mediationAutoAdapter {
+    //自动适配adn 所有adn adapter，默认值为true，如果为false脚本功能全部关闭
+    autoUpdate false
+    //如果不想全部自动适配，可选择此项，默认值为空[]，可以不填写
+    //如果autoUpdate设置成false，此项不生效，不会自动适配adn adapter
+    //如果autoUpdate设置成true，autoUpdateAdn配置了adn，则生效配置的adn。
+    //autoUpdateAdn没有配置adn，自动适配所有的adn
+//    autoUpdateAdn = ["gdt", "baidu", "ks", "klevin", "admob", "mtg", "sigmob", "unity"]
+}

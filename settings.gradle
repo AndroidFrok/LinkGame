@@ -1,2 +1,5 @@
 rootProject.name='LinkGame'
 include ':app'
+include ':library:widget'
+include ':lunzi'
+include ':library:base'
