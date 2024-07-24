@@ -16,6 +16,7 @@ import com.tencent.mmkv.MMKV;
 import org.litepal.LitePalApplication;
 
 import okhttp3.OkHttpClient;
+import swu.xl.linkgame.Constant.Constant;
 import swu.xl.linkgame.R;
 import swu.xl.linkgame.Util.AppConfig;
 import swu.xl.linkgame.Util.DebugLoggerTree;
@@ -81,7 +82,7 @@ public class MyApp extends LitePalApplication {
                 // 设置服务器配置
                 // 设置请求处理策略
                 .setHandler(new RequestHandler(application))
-                .addHeader("source", "sxqy")
+                .addHeader("source", Constant.adSource)
                 // 设置请求重试次数
                 /*.setRetryCount(1).setInterceptor((api, params, headers) -> {
                     // 添加全局请求头

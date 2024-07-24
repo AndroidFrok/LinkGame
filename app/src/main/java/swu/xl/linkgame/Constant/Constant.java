@@ -1,6 +1,10 @@
 package swu.xl.linkgame.Constant;
 
 public interface Constant {
+    /**
+     *  穿山甲广告应用标识
+     */
+    static public String adSource = "sxqy";
     //日志TAG
     String TAG = "Constant";
 

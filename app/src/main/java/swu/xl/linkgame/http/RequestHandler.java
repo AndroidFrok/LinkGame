@@ -53,6 +53,7 @@ public final class RequestHandler implements IRequestHandler {
 
     private final Application mApplication;
 
+
     private Gson mGson;
 
     public RequestHandler(Application application) {
