@@ -60,6 +60,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private BroadcastReceiver mBroadcastReceiver;
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
+
     @Xml(layouts = "activity_main")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,10 +275,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (!BackgroundMusicManager.getInstance(this).isBackgroundMusicPlaying()) {
 
             //播放
-            BackgroundMusicManager.getInstance(this).playBackgroundMusic(
-                    R.raw.bg_music,
-                    true
-            );
+            BackgroundMusicManager.getInstance(this).playBackgroundMusic(R.raw.bg_music, true);
         }
     }
 

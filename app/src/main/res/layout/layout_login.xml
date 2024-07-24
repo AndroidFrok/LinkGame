@@ -212,6 +212,7 @@
                     android:textSize="@dimen/sp_10" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_pri"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="《隐私协议》"

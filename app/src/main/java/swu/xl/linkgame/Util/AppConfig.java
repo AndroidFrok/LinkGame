@@ -73,6 +73,9 @@ public final class AppConfig {
         return "https://app.sanshumiliangfang.com";
     }
 
+    public static String UserProtocol = AppConfig.getHostUrl() + "/uniapp/#/pages/public/richtext?id=1";
+    public static String PrivacyProtocol = AppConfig.getHostUrl() + "/uniapp/#/pages/public/richtext?id=2";
+
     static public Long getRandomDelay() {
         if (!isDebug()) {
             return 0L;

@@ -1,6 +1,7 @@
 package swu.xl.linkgame.Activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.hjq.http.listener.OnHttpListener;
 import com.kongzue.dialogx.dialogs.PopTip;
 
 import swu.xl.linkgame.R;
+import swu.xl.linkgame.Util.AppConfig;
 import swu.xl.linkgame.Util.MmkvUtil;
 import swu.xl.linkgame.Util.UserHelper;
 import swu.xl.linkgame.http.LoginApi;
@@ -31,7 +33,7 @@ public class LoginAct extends BaseActivity {
     private ConstraintLayout root_pass, root_sms;
     private AppCompatEditText et_account, et_password, et_password1;
     private MaterialButton btn_login;
-    private MaterialTextView code_btn;
+    private MaterialTextView code_btn, tv_pri;
     private boolean isSmsLogin;
 
     /*@Override
@@ -50,6 +52,7 @@ public class LoginAct extends BaseActivity {
     protected void initView() {
         UserHelper.logout();
         tv_sms = findViewById(R.id.tv_sms);
+        tv_pri = findViewById(R.id.tv_pri);
         check_agree = findViewById(R.id.check_agree);
         tv_account = findViewById(R.id.tv_account);
         root_pass = findViewById(R.id.root_pass);
@@ -61,6 +64,13 @@ public class LoginAct extends BaseActivity {
         btn_login = findViewById(R.id.btn_login);
         code_btn = findViewById(R.id.code_btn);
         tv_user = findViewById(R.id.tv_user);
+        tv_user.setOnClickListener(v -> {
+//            BrowserActivity.start(LoginAct.this, AppConfig.UserProtocol)
+            toBrowser("",AppConfig.UserProtocol);
+        });
+        tv_pri.setOnClickListener(v ->{
+            toBrowser("",AppConfig.PrivacyProtocol);
+        });
         tv_user.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -96,7 +106,14 @@ public class LoginAct extends BaseActivity {
             reqSms();
         });
     }
+    protected void toBrowser(String title,String uri) {
+            Uri ur = Uri.parse(uri);
+            Intent intent = new Intent(Intent.ACTION_VIEW, ur);
+            startActivity(intent);
 
+//            //             BrowserActivity.start(LoginAct.this, AppConfig.PrivacyProtocol)
+//        WebActivity.start(getContext(),title,uri);
+    }
     @Override
     public void onBackPressed() {
         finish();
@@ -123,7 +140,7 @@ public class LoginAct extends BaseActivity {
                 PopTip.show(result.getMsg());
 //                Timber.d(result.getCode() + "");
                 if (result.getCode() == 1) {
-                    UserHelper.login(result.getData()) ;
+                    UserHelper.login(result.getData());
                     EasyConfig.getInstance().addHeader(MmkvUtil.Token, MmkvUtil.getString(MmkvUtil.Token, ""));
                     startActivity(new Intent(LoginAct.this, MainActivity.class));
                     finish();
