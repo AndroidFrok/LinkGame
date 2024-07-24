@@ -52,6 +52,7 @@
             android:name="notch.config"
             android:value="portrait|landscape" />
 
+        <activity android:name=".Activity.AdminActivity" />
         <activity android:name=".Activity.RegAct" />
         <activity android:name=".Activity.LoginAct" />
         <activity android:name=".Activity.LinkActivity" />

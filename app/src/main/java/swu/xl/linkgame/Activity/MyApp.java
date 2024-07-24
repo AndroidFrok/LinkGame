@@ -2,6 +2,8 @@ package swu.xl.linkgame.Activity;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.hjq.http.EasyConfig;
@@ -19,7 +21,6 @@ import okhttp3.OkHttpClient;
 import swu.xl.linkgame.Constant.Constant;
 import swu.xl.linkgame.R;
 import swu.xl.linkgame.Util.AppConfig;
-import swu.xl.linkgame.Util.DebugLoggerTree;
 import swu.xl.linkgame.Util.SmartBallPulseFooter;
 import swu.xl.linkgame.Util.ToastStyle;
 import swu.xl.linkgame.http.RequestHandler;
@@ -31,8 +32,6 @@ public class MyApp extends LitePalApplication {
         super.onCreate();
         initSdk(this);
     }
-
-    private boolean isDebug = true;
 
 
     public void initSdk(Application application) {
@@ -63,7 +62,7 @@ public class MyApp extends LitePalApplication {
         // 初始化吐司
         ToastUtils.init(application, new ToastStyle());
         // 设置调试模式
-        ToastUtils.setDebugMode(isDebug);
+        ToastUtils.setDebugMode(AppConfig.isDebug());
         // 设置 Toast 拦截器
 //        ToastUtils.setInterceptor(new ToastLogInterceptor());
 
@@ -102,8 +101,14 @@ public class MyApp extends LitePalApplication {
 
 
         // 初始化日志打印
-        if (isDebug) {
-            Timber.plant(new DebugLoggerTree());// 报错不影响
+        if (AppConfig.isDebug()) {
+//            Timber.plant(new DebugLoggerTree());// 报错不影响
+            Timber.plant(new Timber.Tree() {
+                @Override
+                protected void log(int i, @Nullable String s, @NonNull String s1, @Nullable Throwable throwable) {
+                    Timber.d("Timber.plant(new Timber.Tree() {");
+                }
+            });
         }
         // 注册网络状态变化监听
         /*ConnectivityManager connectivityManager = getSystemService(getApplicationContext(), ConnectivityManager.class);

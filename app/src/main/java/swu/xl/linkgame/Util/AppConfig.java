@@ -3,6 +3,8 @@ package swu.xl.linkgame.Util;
 
 import java.security.SecureRandom;
 
+import swu.xl.linkgame.BuildConfig;
+
 /**
  * author : Android 轮子哥
  * github : https://github.com/getActivity/AndroidProject
@@ -41,6 +43,7 @@ public final class AppConfig {
      */
     public static String getPackageName() {
         String s = "com.ssmlf_xmbs0717.juhui2024"; //com.sanshumiliangfang0419.juhui2024
+        s = BuildConfig.APPLICATION_ID;
         return s;
     }
 

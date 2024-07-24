@@ -37,10 +37,12 @@ import swu.xl.linkgame.Model.XLUser;
 import swu.xl.linkgame.Music.BackgroundMusicManager;
 import swu.xl.linkgame.Music.SoundPlayUtil;
 import swu.xl.linkgame.R;
+import swu.xl.linkgame.SelfView.XLTextView;
 import swu.xl.linkgame.Util.PxUtil;
 import swu.xl.linkgame.Util.UserHelper;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
+    private XLTextView main_title;
     //简单模式
     Button mode_easy;
     //普通模式
@@ -63,7 +65,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onBackPressed() {
         finish();
-        super.onBackPressed();
     }
 
     @Xml(layouts = "activity_main")
@@ -240,6 +241,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * 数据的初始化
      */
     private void initView() {
+        main_title = findViewById(R.id.main_title);
         mode_easy = findViewById(R.id.main_mode_easy);
         mode_easy.setOnClickListener(this);
         mode_normal = findViewById(R.id.main_mode_normal);
@@ -253,6 +255,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btn_store = findViewById(R.id.main_store);
         btn_store.setOnClickListener(this);
         root_main = findViewById(R.id.root_main);
+
+        main_title.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                startActivity(new Intent(MainActivity.this, AdminActivity.class));
+                return false;
+            }
+        });
     }
 
     /**

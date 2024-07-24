@@ -2,91 +2,78 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_link"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.LinkActivity"
     android:background="@drawable/bg_success_failure_link"
-
-    android:id="@+id/root_link"
-
     android:clipChildren="false"
-    >
+    tools:context=".Activity.LinkActivity">
 
     <!--关卡，道具，暂停信息-->
     <RelativeLayout
         android:id="@+id/message_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/link_message"
-        >
+        android:background="@drawable/link_message">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="80dp"
-            android:layout_marginBottom="5dp"
-            >
+            android:layout_marginBottom="5dp">
 
             <!--关卡-->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <swu.xl.linkgame.SelfView.XLTextView
+                    style="@style/link_level"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="1dp"
-                    android:text="@string/Link"
-                    style="@style/link_level"
-                    />
+                    android:text="@string/Link" />
 
                 <swu.xl.linkgame.SelfView.XLTextView
                     android:id="@+id/link_level_text"
+                    style="@style/link_level_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15"
                     android:paddingStart="25dp"
-                    style="@style/link_level_message"
-                    />
+                    android:text="15" />
 
             </LinearLayout>
 
             <!--道具-->
             <RelativeLayout
                 android:id="@+id/link_props"
-                style="@style/link_prop_relative"
-                >
+                style="@style/link_prop_relative">
 
                 <!--道具 拳击-->
                 <swu.xl.numberitem.NumberOfItem
                     android:id="@+id/prop_fight"
                     style="@style/link_props"
-                    app:srcResource="@drawable/link_prop_fight"
-                    />
+                    app:srcResource="@drawable/link_prop_fight" />
 
                 <!--道具 炸弹-->
                 <swu.xl.numberitem.NumberOfItem
                     android:id="@+id/prop_bomb"
                     style="@style/link_props"
-                    app:srcResource="@drawable/link_prop_bomb"
-                    />
+                    app:srcResource="@drawable/link_prop_bomb" />
 
                 <!--道具 混乱-->
                 <swu.xl.numberitem.NumberOfItem
                     android:id="@+id/prop_refresh"
                     style="@style/link_props"
-                    app:srcResource="@drawable/link_prop_resort"
-                    />
+                    app:srcResource="@drawable/link_prop_resort" />
 
                 <!--暂停-->
                 <ImageView
                     android:id="@+id/link_pause"
                     android:layout_width="55dp"
                     android:layout_height="55dp"
-                    android:src="@drawable/link_stop"
-                    />
+                    android:src="@drawable/link_stop" />
 
             </RelativeLayout>
 
@@ -100,29 +87,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/message_show"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:background="@drawable/link_message"
         android:layout_marginEnd="40dp"
+        android:background="@drawable/link_message"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingTop="0dp"
-        android:paddingBottom="2dp"
-        >
+        android:paddingBottom="2dp">
 
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/link_coin"
             android:layout_marginStart="80dp"
-            />
+            android:src="@drawable/link_coin" />
 
         <swu.xl.linkgame.SelfView.XLTextView
             android:id="@+id/link_money_text"
+            style="@style/link_money_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
             android:text="1099"
-            style="@style/link_money_text"
-            />
+            android:textAlignment="center" />
 
     </LinearLayout>
 
@@ -132,17 +116,15 @@
         android:layout_width="122dp"
         android:layout_height="120dp"
         app:textLeftPadding="20"
-        app:textTopPadding="3"
         app:textSize="17"
-        />
+        app:textTopPadding="3" />
 
     <!--布局部分-->
     <swu.xl.linkgame.LinkGame.SelfView.XLRelativeLayout
         android:id="@+id/link_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@+id/time_show"
-        />
+        android:layout_below="@+id/time_show" />
 
 
 </RelativeLayout>

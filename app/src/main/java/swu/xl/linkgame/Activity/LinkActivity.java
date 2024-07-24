@@ -50,7 +50,7 @@ import swu.xl.linkgame.Util.ScreenUtil;
 import swu.xl.numberitem.NumberOfItem;
 import tyrantgit.explosionfield.ExplosionField;
 
-public class LinkActivity extends BaseActivity implements View.OnClickListener,LinkManager.LinkGame {
+public class LinkActivity extends BaseActivity implements View.OnClickListener, LinkManager.LinkGame {
     //屏幕宽度,高度
     int screenWidth;
     int screenHeight;
@@ -144,7 +144,7 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
         assert bundle != null;
         level = bundle.getParcelable("level");
 
-        Log.d(Constant.TAG,"--------");
+        Log.d(Constant.TAG, "--------");
         Log.d(Constant.TAG, String.valueOf(level));
 
         //查询用户数据
@@ -155,18 +155,18 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
         //查询道具数据
         props = LitePal.findAll(XLProp.class);
         for (XLProp prop : props) {
-            if (prop.getP_kind() == PropMode.PROP_FIGHT.getValue()){
+            if (prop.getP_kind() == PropMode.PROP_FIGHT.getValue()) {
                 //拳头道具
                 fight_num = prop.getP_number();
-                Log.d(Constant.TAG,"查询的消除道具数量："+fight_num);
-            }else if (prop.getP_kind() == PropMode.PROP_BOMB.getValue()){
+                Log.d(Constant.TAG, "查询的消除道具数量：" + fight_num);
+            } else if (prop.getP_kind() == PropMode.PROP_BOMB.getValue()) {
                 //炸弹道具
                 bomb_num = prop.getP_number();
-                Log.d(Constant.TAG,"查询的炸弹道具数量："+bomb_num);
-            }else {
+                Log.d(Constant.TAG, "查询的炸弹道具数量：" + bomb_num);
+            } else {
                 //刷新道具
                 refresh_num = prop.getP_number();
-                Log.d(Constant.TAG,"查询的刷新道具数量："+refresh_num);
+                Log.d(Constant.TAG, "查询的刷新道具数量：" + refresh_num);
             }
         }
     }
@@ -177,14 +177,14 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
     private void initView() {
         screenWidth = ScreenUtil.getScreenWidth(getApplicationContext());
         screenHeight = ScreenUtil.getScreenHeight(getApplicationContext());
-        Log.d(Constant.TAG,"屏幕宽度："+PxUtil.pxToDp(screenWidth,this)+" "+"屏幕高度："+PxUtil.pxToDp(screenWidth,this));
+        Log.d(Constant.TAG, "屏幕宽度：" + PxUtil.pxToDp(screenWidth, this) + " " + "屏幕高度：" + PxUtil.pxToDp(screenWidth, this));
 
         linkInfo = new LinkInfo();
 
         manager = LinkManager.getLinkManager();
 
         message_show_layout = findViewById(R.id.message_show);
-        message_show_layout.setPadding(0,ScreenUtil.getStateBarHeight(this)+ PxUtil.dpToPx(5,this),0,0);
+        message_show_layout.setPadding(0, ScreenUtil.getStateBarHeight(this) + PxUtil.dpToPx(5, this), 0, 0);
 
         //CircleProgress相关设置
         time_circle_progress = findViewById(R.id.time_show);
@@ -197,13 +197,13 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
         );
         layoutParams.setMargins(
                 PxUtil.dpToPx(-50, this),
-                ScreenUtil.getStateBarHeight(this) - PxUtil.dpToPx(20,this),
-                0,0);
+                ScreenUtil.getStateBarHeight(this) - PxUtil.dpToPx(20, this),
+                0, 0);
         //设置角度
         int angle1 = (int) Math.toDegrees(Math.atan(Math.sqrt(44) / 10));
         int angle2 = (int) Math.toDegrees(Math.atan(Math.sqrt(95) / 10));
-        time_circle_progress.setStartAngle(270+angle1);
-        time_circle_progress.setEndAngle(540-angle2);
+        time_circle_progress.setStartAngle(270 + angle1);
+        time_circle_progress.setEndAngle(540 - angle2);
 
         //设置进度颜色以及当前进度值以及总的进度值
         time_circle_progress.setProgress(90);
@@ -220,7 +220,7 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
 
                 link_layout = findViewById(R.id.link_layout);
                 ViewGroup.LayoutParams params_link_layout = link_layout.getLayoutParams();
-                params_link_layout.height = screenHeight-message_bottom;
+                params_link_layout.height = screenHeight - message_bottom;
                 link_layout.setLayoutParams(params_link_layout);
 
                 //监听触摸事件
@@ -232,7 +232,7 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
                         int y = (int) event.getY();
 
                         //触摸事件
-                        if (event.getAction() == MotionEvent.ACTION_DOWN){
+                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
                             for (final AnimalView animal : manager.getAnimals()) {
                                 //获取AnimalView实例的rect
                                 RectF rectF = new RectF(
@@ -242,12 +242,12 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
                                         animal.getBottom());
 
                                 //判断是否包含
-                                if (rectF.contains(x,y) && animal.getVisibility() == View.VISIBLE){
+                                if (rectF.contains(x, y) && animal.getVisibility() == View.VISIBLE) {
                                     //获取上一次触摸的AnimalView
                                     final AnimalView lastAnimal = manager.getLastAnimal();
 
                                     //如果触摸的是石头直接结束
-                                    if (animal.getFlag() == -1){
+                                    if (animal.getFlag() == -1) {
                                         //播放无法点击音效
                                         SoundPlayUtil.getInstance(getBaseContext()).play(5);
 
@@ -255,18 +255,18 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
                                     }
 
                                     //如果不是第一次触摸 且 触摸的不是同一个点
-                                    if (lastAnimal != null && lastAnimal != animal){
+                                    if (lastAnimal != null && lastAnimal != animal) {
 
-                                        Log.d(Constant.TAG,lastAnimal+" "+animal);
+                                        Log.d(Constant.TAG, lastAnimal + " " + animal);
 
                                         //如果两者的图片相同，且两者可以连接
-                                        if(animal.getFlag() == lastAnimal.getFlag() &&
+                                        if (animal.getFlag() == lastAnimal.getFlag() &&
                                                 AnimalSearchUtil.canMatchTwoAnimalWithTwoBreak(
                                                         manager.getBoard(),
                                                         lastAnimal.getPoint(),
                                                         animal.getPoint(),
                                                         linkInfo
-                                                )){
+                                                )) {
                                             //播放无法点击音效
                                             SoundPlayUtil.getInstance(getBaseContext()).play(3);
 
@@ -315,8 +315,8 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
                                                     //设置所有的宝可梦可以点击
                                                     link_layout.setEnabled(true);
                                                 }
-                                            },500);
-                                        }else {
+                                            }, 500);
+                                        } else {
                                             //点击的两个图片不可以相连接
 
                                             //播放点击音效
@@ -324,7 +324,7 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
 
                                             //上一个点恢复原样
                                             lastAnimal.changeAnimalBackground(LinkConstant.ANIMAL_BG);
-                                            if (lastAnimal.getAnimation() != null){
+                                            if (lastAnimal.getAnimation() != null) {
                                                 //清楚所有动画
                                                 lastAnimal.clearAnimation();
                                             }
@@ -336,7 +336,7 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
                                             //将当前点作为选中点
                                             manager.setLastAnimal(animal);
                                         }
-                                    }else if (lastAnimal == null){
+                                    } else if (lastAnimal == null) {
                                         //播放点击音效
                                         SoundPlayUtil.getInstance(getBaseContext()).play(3);
 
@@ -361,7 +361,7 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
                 manager.startGame(getApplicationContext(),
                         link_layout,
                         screenWidth,
-                        screenHeight-message_bottom-ScreenUtil.getNavigationBarHeight(getApplicationContext()),
+                        screenHeight - message_bottom - ScreenUtil.getNavigationBarHeight(getApplicationContext()),
                         level.getL_id(),
                         level.getL_mode()
                 );
@@ -386,14 +386,14 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
         pause.setOnClickListener(this);
 
         //手动调整道具的排列
-        final View[] temp_prop = {prop_fight,prop_bomb,prop_refresh,pause};
+        final View[] temp_prop = {prop_fight, prop_bomb, prop_refresh, pause};
         props_layout.post(new Runnable() {
             @Override
             public void run() {
-                Log.d(Constant.TAG,"道具容器的宽度:"+PxUtil.pxToDp(props_layout.getWidth(),getBaseContext()));
+                Log.d(Constant.TAG, "道具容器的宽度:" + PxUtil.pxToDp(props_layout.getWidth(), getBaseContext()));
 
                 //控制道具的大小
-                int prop_size = PxUtil.dpToPx(55,getBaseContext());
+                int prop_size = PxUtil.dpToPx(55, getBaseContext());
 
                 //计算间距
                 int padding = (props_layout.getWidth() - prop_size * 4) / 5;
@@ -406,9 +406,9 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
                             prop_size
                     );
                     layoutParams.setMargins(
-                            padding+(padding+prop_size)*i,
+                            padding + (padding + prop_size) * i,
                             0,
-                            padding+(padding+prop_size)*i+prop_size,
+                            padding + (padding + prop_size) * i + prop_size,
                             0);
                     //重新设置给道具视图
                     temp_prop[i].setLayoutParams(layoutParams);
@@ -429,9 +429,10 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
 
     /**
      * 选中的AnimalView动画
+     *
      * @param animal
      */
-    private void animationOnSelectAnimal(AnimalView animal){
+    private void animationOnSelectAnimal(AnimalView animal) {
         //缩放动画
         ScaleAnimation scaleAnimation = new ScaleAnimation(
                 1.0f, 1.05f,
@@ -476,11 +477,11 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
         //播放点击音效
         SoundPlayUtil.getInstance(getBaseContext()).play(3);
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.prop_fight:
-                Log.d(Constant.TAG,"拳头道具");
+                Log.d(Constant.TAG, "拳头道具");
 
-                if (fight_num > 0){
+                if (fight_num > 0) {
                     //随机消除一对可以消除的AnimalView
                     manager.fightGame(LinkActivity.this);
 
@@ -490,44 +491,44 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
 
                     //数据库处理
                     ContentValues values = new ContentValues();
-                    values.put("p_number",fight_num);
-                    LitePal.update(XLProp.class,values,1);
-                }else {
+                    values.put("p_number", fight_num);
+                    LitePal.update(XLProp.class, values, 1);
+                } else {
                     Toast.makeText(this, "道具已经用完", Toast.LENGTH_SHORT).show();
                 }
 
                 break;
             case R.id.prop_bomb:
-                Log.d(Constant.TAG,"炸弹道具");
+                Log.d(Constant.TAG, "炸弹道具");
 
-                if (bomb_num > 0){
+                if (bomb_num > 0) {
                     //随机消除某一种所有的AnimalView
                     manager.bombGame(LinkActivity.this);
 
                     //数量减1
                     bomb_num--;
                     prop_bomb.setCount(bomb_num);
-                    Log.d(Constant.TAG,"数量："+bomb_num);
+                    Log.d(Constant.TAG, "数量：" + bomb_num);
 
                     //数据库处理
                     ContentValues values = new ContentValues();
-                    values.put("p_number",bomb_num);
-                    LitePal.update(XLProp.class,values,2);
-                }else {
+                    values.put("p_number", bomb_num);
+                    LitePal.update(XLProp.class, values, 2);
+                } else {
                     Toast.makeText(this, "道具已经用完", Toast.LENGTH_SHORT).show();
                 }
 
                 break;
             case R.id.prop_refresh:
-                Log.d(Constant.TAG,"刷新道具");
+                Log.d(Constant.TAG, "刷新道具");
 
-                if (refresh_num > 0){
+                if (refresh_num > 0) {
                     //刷新游戏
                     manager.refreshGame(
                             getApplicationContext(),
                             link_layout,
                             screenWidth,
-                            screenHeight-message_bottom-ScreenUtil.getNavigationBarHeight(getApplicationContext()),
+                            screenHeight - message_bottom - ScreenUtil.getNavigationBarHeight(getApplicationContext()),
                             level.getL_id(),
                             level.getL_mode(),
                             LinkActivity.this
@@ -539,15 +540,15 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
 
                     //数据库处理
                     ContentValues values = new ContentValues();
-                    values.put("p_number",refresh_num);
-                    LitePal.update(XLProp.class,values,3);
-                }else {
+                    values.put("p_number", refresh_num);
+                    LitePal.update(XLProp.class, values, 3);
+                } else {
                     Toast.makeText(this, "道具已经用完", Toast.LENGTH_SHORT).show();
                 }
 
                 break;
             case R.id.link_pause:
-                Log.d(Constant.TAG,"暂停");
+                Log.d(Constant.TAG, "暂停");
 
                 //暂停游戏
                 //1.定时器暂停
@@ -557,9 +558,9 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 final PauseFragment pause = new PauseFragment();
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("level",level);
+                bundle.putParcelable("level", level);
                 pause.setArguments(bundle);
-                transaction.replace(R.id.root_link,pause,"pause");
+                transaction.replace(R.id.root_link, pause, "pause");
                 transaction.commit();
 
                 break;
@@ -571,30 +572,30 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
     @Override
     public void onTimeChanged(float time) {
         //如果时间小于0
-        if (time <= 0.0){
+        if (time <= 0.0) {
             manager.pauseGame();
-            manager.endGame(this,level,time);
-        }else {
+            manager.endGame(this, level, time);
+        } else {
             //保留小数后一位
             time_circle_progress.setProgress(time);
         }
 
         //如果board全部清除了
-        if (LinkUtil.getBoardState()){
+        if (LinkUtil.getBoardState()) {
             //结束游戏
             manager.pauseGame();
-            level.setL_time((int) (LinkConstant.TIME -time));
+            level.setL_time((int) (LinkConstant.TIME - time));
             level.setL_new(LinkUtil.getStarByTime((int) time));
-            manager.endGame(this,level,time);
+            manager.endGame(this, level, time);
 
             //关卡结算
             level.update(level.getId());
 
             //下一关判断
             XLLevel next_level = LitePal.find(XLLevel.class, level.getId() + 1);
-            if (next_level.getL_new() == '0'){
+            if (next_level.getL_new() == '0') {
                 next_level.setL_new('4');
-                next_level.update(level.getId()+1);
+                next_level.update(level.getId() + 1);
             }
 
             //金币道具清算
@@ -616,7 +617,7 @@ public class LinkActivity extends BaseActivity implements View.OnClickListener,L
         super.onResume();
 
         //开启游戏
-        if (manager.isPause()){
+        if (manager.isPause()) {
             manager.pauseGame();
         }
     }
