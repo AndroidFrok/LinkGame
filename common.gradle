@@ -11,7 +11,7 @@ android {
         minSdkVersion 21
         // 目标适配版本
         targetSdkVersion androidapi
-        versionName "20230713"
+        versionName "20230724"
         versionCode 1
     }
 
