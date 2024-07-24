@@ -126,7 +126,7 @@ android {
 // api 与 implementation 的区别：https://www.jianshu.com/p/8962d6ba936e
 dependencies {
     // 基类封装       无特殊情况  请勿在模块级配置文件增加依赖！！！！！！！！！！！！！！！！
-    implementation project(':library:base')
+    api project(':library:base')
     // 控件封装
-    implementation project(':library:widget')
+    api project(':library:widget')
 }
