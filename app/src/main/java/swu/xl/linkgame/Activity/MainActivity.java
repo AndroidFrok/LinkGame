@@ -408,6 +408,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         UserHelper.logout();
+        BackgroundMusicManager.getInstance(this).end();
         unregisterReceiver(mBroadcastReceiver);
     }
 }
