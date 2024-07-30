@@ -133,5 +133,6 @@ dependencies {
     def logcat = 11.85 // 11.86 佬报错
     debugImplementation "com.github.getActivity:Logcat:$logcat"
     previewImplementation "com.github.getActivity:Logcat:$logcat"
+    implementation 'com.pangle.cn:mediation-sdk:6.1.2.5'
 
 }

@@ -1,5 +1,6 @@
 package swu.xl.linkgame.Activity;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,18 +15,45 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
 
+import com.bytedance.sdk.openadsdk.AdSlot;
+import com.bytedance.sdk.openadsdk.TTAdConfig;
+import com.bytedance.sdk.openadsdk.TTAdConstant;
+import com.bytedance.sdk.openadsdk.TTAdInteractionListener;
+import com.bytedance.sdk.openadsdk.TTAdLoadType;
+import com.bytedance.sdk.openadsdk.TTAdNative;
+import com.bytedance.sdk.openadsdk.TTAdSdk;
+import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
+import com.bytedance.sdk.openadsdk.mediation.init.MediationConfig;
+import com.bytedance.sdk.openadsdk.mediation.init.MediationConfigUserInfoForSegment;
+import com.bytedance.sdk.openadsdk.mediation.manager.MediationAdEcpmInfo;
+import com.bytedance.sdk.openadsdk.mediation.manager.MediationBaseManager;
 import com.gyf.immersionbar.ImmersionBar;
+import com.hjq.http.EasyHttp;
+import com.hjq.http.listener.OnHttpListener;
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
+import com.hjq.toast.ToastUtils;
 import com.zhangyue.we.x2c.X2C;
 import com.zhangyue.we.x2c.ano.Xml;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.litepal.LitePal;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import swu.xl.linkgame.Constant.Constant;
 import swu.xl.linkgame.Fragment.HelpFragment;
@@ -38,8 +66,15 @@ import swu.xl.linkgame.Music.BackgroundMusicManager;
 import swu.xl.linkgame.Music.SoundPlayUtil;
 import swu.xl.linkgame.R;
 import swu.xl.linkgame.SelfView.XLTextView;
+import swu.xl.linkgame.Util.AppConfig;
+import swu.xl.linkgame.Util.MmkvUtil;
 import swu.xl.linkgame.Util.PxUtil;
+import swu.xl.linkgame.Util.TTAdManagerHolder;
 import swu.xl.linkgame.Util.UserHelper;
+import swu.xl.linkgame.http.AdlogApi;
+import swu.xl.linkgame.http.model.HttpData;
+import swu.xl.linkgame.http.model.RewardBundleModel;
+import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
     private XLTextView main_title;
@@ -411,4 +446,385 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         BackgroundMusicManager.getInstance(this).end();
         unregisterReceiver(mBroadcastReceiver);
     }
+
+
+    /*                下方 专门 设置广告  */
+    /**
+     *
+     */
+    private long startTime = 0;
+    private TTAdNative mTTAdNative;
+
+    private AdLoadListener mAdLoadListener;
+    private long loadTime;
+    private String token = "";
+
+    private void initTTSDKConfig() {
+        //step2:创建TTAdNative对象，createAdNative(Context context) banner广告context需要传入Activity对象
+        mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
+        //step3:(可选，强烈建议在合适的时机调用):申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
+        // TTAdManagerHolder.get().requestPermissionIfNecessary(this);
+        //不使用穿山甲自带权限申请，不可控且申请过多
+
+        XXPermissions.with(this).permission(Permission.READ_PHONE_STATE, Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION).request(new OnPermissionCallback() {
+            @Override
+            public void onGranted(List<String> permissions, boolean all) {
+
+                loadAd();
+            }
+
+            @Override
+            public void onDenied(List<String> permissions, boolean never) {
+                OnPermissionCallback.super.onDenied(permissions, never);
+
+            }
+        });
+    }
+
+    /**
+     * 加载广告   激励视频
+     */
+    private void loadAd() {
+        if (mTTAdNative == null) {
+            initTTSDKConfig();
+        }
+        //step5:创建广告请求参数AdSlot
+        AdSlot adSlot = new AdSlot.Builder().setCodeId(Constant.mMediaId) // 广告代码位Id
+                .setAdLoadType(TTAdLoadType.PRELOAD) // 本次广告用途：TTAdLoadType.LOAD实时；TTAdLoadType.PRELOAD预请求
+                .setOrientation(TTAdConstant.ORIENTATION_VERTICAL).setRewardAmount(555).setUserData(getUserData()).setRewardName("金币").build();
+        //step6:注册广告加载生命周期监听，请求广告
+        mAdLoadListener = new AdLoadListener(this);
+        mTTAdNative.loadRewardVideoAd(adSlot, mAdLoadListener);
+    }
+
+    private String getUserData() {
+        JSONArray jsonArray = new JSONArray();
+        JSONObject object = new JSONObject();
+        try {
+            object.put("name", "auth_reward_gold");
+            object.put("value", "3000");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        jsonArray.put(object);
+
+        return jsonArray.toString();
+    }
+
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return new Lifecycle() {
+            @Override
+            public void addObserver(@NonNull LifecycleObserver observer) {
+
+            }
+
+            @Override
+            public void removeObserver(@NonNull LifecycleObserver observer) {
+
+            }
+
+            @NonNull
+            @Override
+            public State getCurrentState() {
+                return null;
+            }
+        };
+    }
+
+
+    /**
+     * 【必须】广告加载期间生命周期监听
+     */
+
+    private class AdLoadListener implements TTAdNative.RewardVideoAdListener {
+
+        private final Activity mActivity;
+
+        private TTRewardVideoAd mAd;
+
+        private TTAdInteractionListener mInteractionListener = new TTAdInteractionListener() {
+            @Override
+            public void onAdEvent(int code, Map map) {
+
+                if (code == TTAdConstant.AD_EVENT_AUTH_DOUYIN && map != null) {
+                    // 抖音授权成功状态回调, 媒体可以通过map获取抖音openuid用以判断是否下发奖励
+                    String uid = (String) map.get("open_uid");
+//                    Timber.i( "授权成功 --> uid：" + uid);
+                }
+            }
+        };
+
+        public AdLoadListener(Activity activity) {
+            mActivity = activity;
+        }
+
+        /**
+         * 广告加载过程中出错
+         */
+        @Override
+        public void onError(int code, String message) {
+            Timber.e("Callback --> onError1: " + code + ", " + message);
+            ToastUtils.show("onError " + message);
+        }
+
+        /**
+         * 广告基础信息加载完成，此方法是回调后是广告可调用展示的最早时机
+         *
+         * @param ad 广告对象 在一次广告生命周期中onRewardVideoAdLoad与onRewardVideoCached回调中的ad是同一个对象
+         */
+        @Override
+
+        public void onRewardVideoAdLoad(TTRewardVideoAd ad) {
+            Timber.e("Callback --> onRewardVideoAdLoad");
+//            ToastUtils.show( "rewardVideoAd loaded 广告类型：" + getAdType(ad.getRewardVideoAdType()));
+            handleAd(ad);
+        }
+
+        @Override
+
+        public void onRewardVideoCached() {
+            // 已废弃 请使用 onRewardVideoCached(TTRewardVideoAd ad) 方法
+        }
+
+        /**
+         * 广告基础信息与素材缓存完成，此时调用广告展示流畅，是展示广告的最理想时机
+         *
+         * @param ad 广告对象 在一次广告生命周期中onRewardVideoAdLoad与onRewardVideoCached回调中的ad是同一个对象
+         */
+        @Override
+
+        public void onRewardVideoCached(TTRewardVideoAd ad) {
+            Timber.e("Callback --> onRewardVideoCached");
+//            ToastUtils.show( "rewardVideoAd cached 广告类型：" + getAdType(ad.getRewardVideoAdType()));
+            handleAd(ad);
+        }
+
+        /**
+         * 处理广告对象
+         */
+
+        public void handleAd(TTRewardVideoAd ad) {
+            if (mAd != null) {
+                return;
+            }
+            mAd = ad;
+            //【必须】广告展示时的生命周期监听
+
+            mAd.setRewardAdInteractionListener(new AdLifeListener(mActivity));
+
+            //【可选】再看一个展示时的生命状态监听
+
+//            PlayAgainAdLifeListener playAgainAdLifeListener = new PlayAgainAdLifeListener(mActivity);
+//            mAd.setRewardPlayAgainInteractionListener(playAgainAdLifeListener);
+            //【可选】再看一个入口与奖励显示控制器
+
+//            PlayAgainController playAgainController = new PlayAgainController();
+//            playAgainController.setPlayAgainAdLifeListener(playAgainAdLifeListener);
+//            mAd.setRewardPlayAgainController(playAgainController);
+            //【可选】监听下载状态
+//            mAd.setDownloadListener(new DownloadStatusListener());
+            loadTime = System.currentTimeMillis();
+            /**
+             * 注册广告事件监听， 目前只有授权事件定义，后续会扩展
+             */
+            mAd.setAdInteractionListener(mInteractionListener);
+        }
+
+        /**
+         * 触发展示广告
+         */
+        public void showAd() {
+            if (mAd == null) {
+                ToastUtils.show("当前广告未加载好，请先点击加载广告");
+                loadAd();
+                return;
+            } else {
+                mAd.showRewardVideoAd(mActivity);
+            }
+            // 广告使用后应废弃
+            // mAd = null;
+        }
+    }
+
+    /**
+     * 【必须】广告生命状态监听器
+     */
+
+    private class AdLifeListener implements TTRewardVideoAd.RewardAdInteractionListener {
+
+        private final WeakReference<Context> mContextRef;
+
+        public AdLifeListener(Context context) {
+            mContextRef = new WeakReference<>(context);
+        }
+
+        @Override
+
+        public void onAdShow() {
+            // 广告展示
+//            Timber.d( "Callback --> rewardVideoAd show");
+//            ToastUtils.show( "rewardVideoAd show");
+            //为了确保数据的准确性，强烈建议在展示后获取展示广告的详细信息，包括广告位类型-getRitType、流量分组ID-getSegmentId、AB实验分组ID-getABTestId、渠道名称-getChannel、子渠道名称-getSubChannel、场景ID-getScenariold、价格-getEcpm、ADN平台-getSdkName
+            if (mAdLoadListener == null || mAdLoadListener.mAd == null) return;
+            adEcpmInfo(mAdLoadListener.mAd.getMediationManager());
+        }
+
+        @Override
+
+        public void onAdVideoBarClick() {
+            // 广告中产生了点击行为
+//            Timber.d( "Callback --> rewardVideoAd bar click");
+//            ToastUtils.show( "rewardVideoAd bar click");
+        }
+
+        @Override
+
+        public void onAdClose() {
+            // 广告整体关闭
+            Timber.d("Callback --> rewardVideoAd close");
+//            ToastUtils.show( "rewardVideoAd close");
+//            watchComplete();
+            reqADlog();
+
+        }
+
+        //视频播放完成回调
+        @Override
+        public void onVideoComplete() {
+            // 广告素材播放完成，例如视频未跳过，完整的播放了
+//            Timber.d( "Callback --> rewardVideoAd complete");
+//            ToastUtils.show( "rewardVideoAd complete");
+            reqADlog();
+        }
+
+        @Override
+        public void onVideoError() {
+            // 广告素材展示时出错
+//            Timber.e( "Callback --> rewardVideoAd error");
+            ToastUtils.show("rewardVideoAd error");
+        }
+
+        @Override
+        public void onRewardVerify(boolean rewardVerify, int rewardAmount, String rewardName, int errorCode, String errorMsg) {
+            // 已废弃 请使用 onRewardArrived(boolean isRewardValid, int rewardType, Bundle extraInfo)
+        }
+
+        @Override
+
+        public void onRewardArrived(boolean isRewardValid, int rewardType, Bundle extraInfo) {
+            // 用户的观看行为满足了奖励条件
+            RewardBundleModel rewardBundleModel = new RewardBundleModel(extraInfo);
+            Timber.e("Callback --> rewardVideoAd has onRewardArrived " + "\n奖励是否有效：" + isRewardValid + "\n奖励类型：" + rewardType + "\n奖励名称：" + rewardBundleModel.getRewardName() + "\n奖励数量：" + rewardBundleModel.getRewardAmount() + "\n建议奖励百分比：" + rewardBundleModel.getRewardPropose());
+//            ToastUtils.show( "ad onRewardArrived valid:" + isRewardValid + " type:" + rewardType + " errorCode:" + rewardBundleModel.getServerErrorCode());
+            if (!isRewardValid) {
+                Timber.d("发送奖励失败 code：" + rewardBundleModel.getServerErrorCode() + "\n msg：" + rewardBundleModel.getServerErrorMsg());
+                return;
+            }
+
+
+            if (rewardType == TTRewardVideoAd.REWARD_TYPE_DEFAULT) {
+                Timber.d("普通奖励发放，name:" + rewardBundleModel.getRewardName() + "\namount:" + rewardBundleModel.getRewardAmount() + "\n 建议比例" + rewardBundleModel.getRewardPropose());
+            }
+        }
+
+        @Override
+        public void onSkippedVideo() {
+            // 用户在观看素材时点击了跳过
+            Timber.e("Callback --> rewardVideoAd has onSkippedVideo");
+            ToastUtils.show("rewardVideoAd has onSkippedVideo");
+        }
+    }
+
+
+    /**
+     * 获取广告的价格等信息
+     */
+    public void adEcpmInfo(MediationBaseManager mediationManager) {
+        if (mediationManager == null) return;
+        MediationAdEcpmInfo item = mediationManager.getShowEcpm();
+        if (item == null) return;
+        Timber.i("EcpmInfo: \n" + "adn名称 SdkName: " + item.getSdkName() + ",\n" + "自定义adn名称 CustomSdkName: " + item.getCustomSdkName() + ",\n" + "代码位Id SlotId: " + item.getSlotId() + ",\n" + "广告价格 Ecpm(单位：分): " + item.getEcpm() + ",\n" + "广告竞价类型 ReqBiddingType: " + item.getReqBiddingType() + ",\n" + "多阶底价标签 LevelTag: " + item.getLevelTag() + ",\n" + "多阶底价标签解析失败原因 ErrorMsg: " + item.getErrorMsg() + ",\n" + "adn请求Id RequestId: " + item.getRequestId() + ",\n" + "广告类型 RitType: " + item.getRitType() + ",\n" + "AB实验Id AbTestId: " + item.getAbTestId() + ",\n" + "场景Id ScenarioId: " + item.getScenarioId() + ",\n" + "流量分组Id SegmentId: " + item.getSegmentId() + ",\n" + "流量分组渠道 Channel: " + item.getChannel() + ",\n" + "流量分组子渠道 SubChannel: " + item.getSubChannel() + ",\n" + "开发者传入的自定义数据 customData: " + item.getCustomData());
+    }
+
+    private void initChuanshanjia() {
+        TTAdSdk.init(this, new TTAdConfig.Builder().appId(Constant.csjId).useTextureView(true) //默认使用SurfaceView播放视频广告,当有SurfaceView冲突的场景，可以使用TextureView
+                .appName(getResources().getString(R.string.app_name)).titleBarTheme(TTAdConstant.TITLE_BAR_THEME_DARK)//落地页主题
+                .allowShowNotify(true) //是否允许sdk展示通知栏提示,若设置为false则会导致通知栏不显示下载进度
+                .debug(AppConfig.isDebug()) //测试阶段打开，可以通过日志排查问题，上线时去除该调用 AppConfig.isDebug()
+                .directDownloadNetworkType(TTAdConstant.NETWORK_STATE_WIFI) //允许直接下载的网络状态集合,没有设置的网络下点击下载apk会有二次确认弹窗，弹窗中会披露应用信息
+                .supportMultiProcess(false) //是否支持多进程，true支持
+                .useMediation(true) //如果您需要设置隐私策略请参考该api
+                .setMediationConfig(new MediationConfig.Builder() //可设置聚合特有参数详细设置请参考该api
+                        .setMediationConfigUserInfoForSegment(getUserInfoForSegment())//如果您需要配置流量分组信息请参考该api
+                        .build())
+                //.httpStack(new MyOkStack3())//自定义网络库，demo中给出了okhttp3版本的样例，其余请自行开发或者咨询工作人员。
+//                        .updateAdConfig(ttAdConfig)//参数类型为TTAdConfig；注意使用该方法会覆盖之前初始化sdk的配置的data值；个性化推荐设置详见：https://www.csjplatform.com/supportcenter/26234
+                .build());
+        //如果明确某个进程不会使用到广告SDK，可以只针对特定进程初始化广告SDK的content
+        //if (PROCESS_NAME_XXXX.equals(processName)) {
+        //   TTAdSdk.init(context, config);
+        //}
+        TTAdSdk.start(new TTAdSdk.Callback() {
+            @Override
+            public void success() {
+                Timber.i("穿山甲初始化成功");
+                //聚合初次会拉取配置文件可能导致很慢，Activity中广告请求可能早于了广告SDK初始化
+//                EventBus.getDefault().postSticky(new AdInitSuccessEvent());
+                initTTSDKConfig();
+            }
+
+            @Override
+            public void fail(int i, String s) {
+                Timber.w("穿山甲初始化失败了！");
+            }
+        });
+    }
+
+    private MediationConfigUserInfoForSegment getUserInfoForSegment() {
+        MediationConfigUserInfoForSegment userInfo = new MediationConfigUserInfoForSegment();
+//        userInfo.setUserId("msdk-demo");
+        userInfo.setGender(MediationConfigUserInfoForSegment.GENDER_MALE);
+        String devOaid = "ssmlf-xxl";
+        userInfo.setChannel(devOaid);
+        userInfo.setSubChannel("aabbccc");
+        userInfo.setUserId("userid");
+//        userInfo.setAge(999);
+        userInfo.setUserValueGroup("msdk-demo-user-value-group");
+        Map<String, String> customInfos = new HashMap<>();
+//        customInfos.put("aaaa", "test111");
+        customInfos.put("channel", "channelchannel");
+        userInfo.setCustomInfos(customInfos);
+        return userInfo;
+    }
+
+    /**
+     * 广告播放结束 通知后端
+     */
+    private void reqADlog() {
+        String source = MmkvUtil.getString(MmkvUtil.UserSource, "");
+        if (source.equals("xmbs")) {
+            return;
+        }
+        String slotId = Constant.mMediaId;
+        String p = token + "#" + loadTime;
+        Timber.d("拼接  " + p);
+//        String pp = MD5Utils.getMD5Code(p);
+        AdlogApi a = new AdlogApi();
+        a.setAd_slot_id(slotId);
+//        a.setUserAdSn(pp);
+        EasyHttp.post(this).api(a).delay(AppConfig.getRandomDelay()).request(new OnHttpListener<HttpData>() {
+            @Override
+            public void onSucceed(HttpData result) {
+
+            }
+
+            @Override
+            public void onFail(Exception e) {
+
+            }
+        });
+    }
+
 }

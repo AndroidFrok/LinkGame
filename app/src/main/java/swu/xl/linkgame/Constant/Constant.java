@@ -22,4 +22,13 @@ public interface Constant {
 
     //发送定时器消息的what
     int TIMER = 1;
+
+    /**
+     * 代码位ID
+     */
+    String csjId = "5548986";
+    /**
+     * 广告位ID
+     */
+    String mMediaId = "102911003";
 }
