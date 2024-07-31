@@ -75,6 +75,7 @@ dependencies {
     def coroutines = "1.6.0"//1.6.0
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutines}"
+    implementation 'com.pangle.cn:mediation-sdk:6.1.2.5'
     /* ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑以上依赖不可随意升级版本 */
 
     implementation 'org.greenrobot:eventbus:3.3.1'
@@ -133,5 +134,4 @@ dependencies {
     def logcat = 11.85 // 11.86 佬报错
     debugImplementation "com.github.getActivity:Logcat:$logcat"
     previewImplementation "com.github.getActivity:Logcat:$logcat"
-
 }

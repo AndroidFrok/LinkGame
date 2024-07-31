@@ -103,12 +103,12 @@ public class MyApp extends LitePalApplication {
         // 初始化日志打印
         if (AppConfig.isDebug()) {
 //            Timber.plant(new DebugLoggerTree());// 报错不影响
-            Timber.plant(new Timber.Tree() {
+            /*Timber.plant(new Timber.Tree() {
                 @Override
                 protected void log(int i, @Nullable String s, @NonNull String s1, @Nullable Throwable throwable) {
                     Timber.d("Timber.plant(new Timber.Tree() {");
                 }
-            });
+            });*/
         }
         // 注册网络状态变化监听
         /*ConnectivityManager connectivityManager = getSystemService(getApplicationContext(), ConnectivityManager.class);
