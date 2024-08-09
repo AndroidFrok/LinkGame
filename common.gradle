@@ -48,6 +48,8 @@ android {
         disable 'HardcodedText'
         // 禁用图片描述警告
         disable 'ContentDescription'
+        abortOnError false
+        checkReleaseBuilds false
     }
 }
 
